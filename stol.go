@@ -132,8 +132,8 @@ func render(g *Game, in input) string {
 
 	var b strings.Builder
 	fmt.Fprintf(&b, "👥 %s\n", freeSlots(free))
-	fmt.Fprintf(&b, "⏰ %s\n", in.hhmm)
 	fmt.Fprintf(&b, "🎲 %s\n", g.NamePl)
+	fmt.Fprintf(&b, "⏰ %s\n", in.hhmm)
 	b.WriteString("\n")
 	for i := range rows {
 		who := "?"
