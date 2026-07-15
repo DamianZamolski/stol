@@ -9,7 +9,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"slices"
@@ -30,11 +29,6 @@ const (
 	pickerShown = 3
 )
 
-var venues = map[string]string{
-	"balagra":  "https://www.facebook.com/balagra.lask/events",
-	"retkinia": "https://www.facebook.com/groups/385831296472892/events",
-}
-
 func main() {
 	if err := run(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, "błąd:", err)
@@ -43,11 +37,7 @@ func main() {
 }
 
 func run(argv []string) error {
-	args, open, err := parseFlags(argv)
-	if err != nil {
-		return err
-	}
-	in, err := parseArgs(args)
+	in, err := parseArgs(argv)
 	if err != nil {
 		return err
 	}
@@ -67,15 +57,6 @@ func run(argv []string) error {
 
 	post := render(game, in)
 	fmt.Println(post)
-
-	if err := clip(post); err != nil {
-		fmt.Fprintln(os.Stderr, "uwaga: nie skopiowano do schowka:", err)
-	}
-	for _, name := range open {
-		if err := exec.Command("xdg-open", venues[name]).Run(); err != nil {
-			fmt.Fprintf(os.Stderr, "uwaga: nie otwarto %s: %v\n", name, err)
-		}
-	}
 	return nil
 }
 
@@ -86,25 +67,10 @@ type input struct {
 	players []string
 }
 
-func parseFlags(argv []string) (args []string, open []string, err error) {
-	for _, a := range argv {
-		if !strings.HasPrefix(a, "--") {
-			args = append(args, a)
-			continue
-		}
-		name := strings.TrimPrefix(a, "--")
-		if _, ok := venues[name]; !ok {
-			return nil, nil, fmt.Errorf("nieznana flaga: %s", a)
-		}
-		open = append(open, name)
-	}
-	return args, open, nil
-}
-
 func parseArgs(args []string) (input, error) {
 	var in input
 	if len(args) == 0 {
-		return in, errors.New("użycie: stol <gra> [godzina] [liczba-graczy] [imiona...] [--balagra] [--retkinia]")
+		return in, errors.New("użycie: stol <gra> [godzina] [liczba-graczy] [imiona...]")
 	}
 	in.query = args[0]
 	rest := args[1:]
@@ -192,12 +158,6 @@ func freeSlots(n int) string {
 	default:
 		return fmt.Sprintf("%d wolnych miejsc", n)
 	}
-}
-
-func clip(post string) error {
-	cmd := exec.Command("wl-copy")
-	cmd.Stdin = strings.NewReader(post)
-	return cmd.Run()
 }
 
 type Game struct {
