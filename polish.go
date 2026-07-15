@@ -33,16 +33,9 @@ func pickPolishName(c *candidate) (string, Error) {
 	}
 	sort.SliceStable(full, func(i, j int) bool { return plScore(full[i].name) > plScore(full[j].name) })
 
-	shown := full
-	if len(shown) > pickerShown {
-		shown = shown[:pickerShown]
-	}
-
 	for {
 		fmt.Fprintf(os.Stderr, "\nNazwa polska dla: %s\n", c.Name)
-		other := len(shown) + 1
-		fmt.Fprintf(os.Stderr, "  %d. inna (pokaż wszystkie)\n", other)
-		for i, s := range slices.Backward(shown) {
+		for i, s := range slices.Backward(full) {
 			tag := ""
 			if s.orig {
 				tag = "  (oryginalna)"
@@ -54,16 +47,10 @@ func pickPolishName(c *candidate) (string, Error) {
 			return "", error
 		}
 		n, error := strconv.Atoi(ans)
-		if error != nil || n < 1 || n > other {
+		if error != nil || n < 1 || n > len(full) {
 			fmt.Fprintln(os.Stderr, "nie rozumiem, spróbuj jeszcze raz")
 			continue
 		}
-		if n == other {
-			if len(shown) < len(full) {
-				shown = full
-			}
-			continue
-		}
-		return shown[n-1].name, nil
+		return full[n-1].name, nil
 	}
 }

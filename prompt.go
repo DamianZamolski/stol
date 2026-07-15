@@ -11,8 +11,6 @@ import (
 	"strings"
 )
 
-const pickerShown = 3
-
 var stdin = bufio.NewReader(os.Stdin)
 
 func interactive() bool {
@@ -42,14 +40,10 @@ func confirm(question string) bool {
 }
 
 func pickGame(candidates []*candidate) (*candidate, Error) {
-	shown := candidates
-	if len(shown) > pickerShown {
-		shown = shown[:pickerShown]
-	}
 	for {
-		other := len(shown) + 1
-		fmt.Fprintf(os.Stderr, "  %d. inna (pokaż wszystkie / podaj link)\n", other)
-		for i, c := range slices.Backward(shown) {
+		other := len(candidates) + 1
+		fmt.Fprintf(os.Stderr, "  %d. inna (podaj link)\n", other)
+		for i, c := range slices.Backward(candidates) {
 			fmt.Fprintf(os.Stderr, "  %d. %s  (%s)\n", i+1, c.Url, c.Year)
 		}
 		ans, error := ask("> ")
@@ -62,13 +56,9 @@ func pickGame(candidates []*candidate) (*candidate, Error) {
 			continue
 		}
 		if n == other {
-			if len(shown) < len(candidates) {
-				shown = candidates
-				continue
-			}
 			return askForUrl()
 		}
-		return shown[n-1], nil
+		return candidates[n-1], nil
 	}
 }
 
