@@ -4,11 +4,13 @@ Guide for Claude Code (claude.ai/code) in this repo.
 
 ## Commands
 
-- `make` — build to `~/.local/bin/stol`
+- `make` — build to `./bin/stol`
+- `make install` — install to `~/.local/bin/stol` (`PREFIX` retargets)
+- `make lint` — golangci-lint (only linter)
+- `make test` — lint then `go test -race ./...`
 - `go build .` — compile
 - `gofmt -l .` — format check (empty output = OK)
-- `go vet ./...` — vet
-- No tests. `go.mod` present (module `stol`, stdlib-only — no deps).
+- No tests yet. `go.mod` present (module `stol`, stdlib-only — no deps).
 
 Run: `stol '<gra>' [godzina] [liczba-graczy] [imiona...]`
 Need `BGG_TOKEN` env var (BGG XML API2 Bearer auth).

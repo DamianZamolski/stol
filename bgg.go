@@ -48,7 +48,7 @@ func bggGet(url string, auth bool) ([]byte, Error) {
 	if error != nil {
 		return nil, error
 	}
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 	body, error := io.ReadAll(response.Body)
 	if error != nil {
 		return nil, error
