@@ -26,7 +26,7 @@ type plOption struct {
 	orig bool
 }
 
-func pickPolishName(c *candidate) (string, error) {
+func pickPolishName(c *candidate) (string, Error) {
 	full := []plOption{{c.Name, true}}
 	for _, a := range c.Alts {
 		full = append(full, plOption{a, false})
@@ -49,12 +49,12 @@ func pickPolishName(c *candidate) (string, error) {
 			}
 			fmt.Fprintf(os.Stderr, "  %d. %s%s\n", i+1, s.name, tag)
 		}
-		ans, err := ask("> ")
-		if err != nil {
-			return "", err
+		ans, error := ask("> ")
+		if error != nil {
+			return "", error
 		}
-		n, err := strconv.Atoi(ans)
-		if err != nil || n < 1 || n > other {
+		n, error := strconv.Atoi(ans)
+		if error != nil || n < 1 || n > other {
 			fmt.Fprintln(os.Stderr, "nie rozumiem, spróbuj jeszcze raz")
 			continue
 		}

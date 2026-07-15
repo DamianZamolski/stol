@@ -6,29 +6,29 @@ import (
 )
 
 func main() {
-	if err := run(os.Args[1:]); err != nil {
-		fmt.Fprintln(os.Stderr, "błąd:", err)
+	if error := run(os.Args[1:]); error != nil {
+		fmt.Fprintln(os.Stderr, "błąd:", error)
 		os.Exit(1)
 	}
 }
 
-func run(argv []string) error {
-	in, err := parseArgs(argv)
-	if err != nil {
-		return err
+func run(argv []string) Error {
+	in, error := parseArgs(argv)
+	if error != nil {
+		return error
 	}
 
-	cfg, err := loadConfig()
-	if err != nil {
-		return err
+	config, error := loadConfig()
+	if error != nil {
+		return error
 	}
 
-	game, err := resolveGame(cfg, in.query)
-	if err != nil {
-		return err
+	game, error := resolveGame(config, in.query)
+	if error != nil {
+		return error
 	}
-	if err := saveConfig(cfg); err != nil {
-		return err
+	if error := saveConfig(config); error != nil {
+		return error
 	}
 
 	post := render(game, in)

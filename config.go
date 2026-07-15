@@ -17,56 +17,56 @@ type Config struct {
 	dirty   bool
 }
 
-func configPath() (string, error) {
-	dir, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
+func configPath() (string, Error) {
+	dir, error := os.UserConfigDir()
+	if error != nil {
+		return "", error
 	}
 	return filepath.Join(dir, "stol", "config.json"), nil
 }
 
-func loadConfig() (*Config, error) {
-	path, err := configPath()
-	if err != nil {
-		return nil, err
+func loadConfig() (*Config, Error) {
+	path, error := configPath()
+	if error != nil {
+		return nil, error
 	}
-	cfg := &Config{Games: map[string]*Game{}, Aliases: map[string]int{}, path: path}
-	data, err := os.ReadFile(path)
-	if errors.Is(err, os.ErrNotExist) {
-		return cfg, nil
+	config := &Config{Games: map[string]*Game{}, Aliases: map[string]int{}, path: path}
+	data, error := os.ReadFile(path)
+	if errors.Is(error, os.ErrNotExist) {
+		return config, nil
 	}
-	if err != nil {
-		return nil, err
+	if error != nil {
+		return nil, error
 	}
-	if err := json.Unmarshal(data, cfg); err != nil {
-		return nil, fmt.Errorf("uszkodzony %s: %w", path, err)
+	if error := json.Unmarshal(data, config); error != nil {
+		return nil, fmt.Errorf("uszkodzony %s: %w", path, error)
 	}
-	if cfg.Games == nil {
-		cfg.Games = map[string]*Game{}
+	if config.Games == nil {
+		config.Games = map[string]*Game{}
 	}
-	if cfg.Aliases == nil {
-		cfg.Aliases = map[string]int{}
+	if config.Aliases == nil {
+		config.Aliases = map[string]int{}
 	}
-	return cfg, nil
+	return config, nil
 }
 
-func saveConfig(cfg *Config) error {
-	if !cfg.dirty {
+func saveConfig(config *Config) Error {
+	if !config.dirty {
 		return nil
 	}
-	if err := os.MkdirAll(filepath.Dir(cfg.path), 0o755); err != nil {
-		return err
+	if error := os.MkdirAll(filepath.Dir(config.path), 0o755); error != nil {
+		return error
 	}
-	data, err := json.MarshalIndent(cfg, "", "  ")
-	if err != nil {
-		return err
+	data, error := json.MarshalIndent(config, "", "  ")
+	if error != nil {
+		return error
 	}
-	return os.WriteFile(cfg.path, append(data, '\n'), 0o644)
+	return os.WriteFile(config.path, append(data, '\n'), 0o644)
 }
 
 func (c *Config) remember(g *Game, alias string) {
-	c.Games[strconv.Itoa(g.ID)] = g
-	c.Aliases[normalize(alias)] = g.ID
+	c.Games[strconv.Itoa(g.Id)] = g
+	c.Aliases[normalize(alias)] = g.Id
 	c.dirty = true
 }
 

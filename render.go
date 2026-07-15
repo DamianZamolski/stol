@@ -23,7 +23,7 @@ func render(g *Game, in input) string {
 		fmt.Fprintf(&b, "%d. %s\n", i+1, who)
 	}
 	b.WriteString("\n")
-	b.WriteString(g.URL)
+	b.WriteString(g.Url)
 	return b.String()
 }
 

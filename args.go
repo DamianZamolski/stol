@@ -9,10 +9,7 @@ import (
 	"unicode"
 )
 
-const (
-	defaultTime = "18:00"
-	maxPlayers  = 12
-)
+const defaultTime = "18:00"
 
 type input struct {
 	query   string
@@ -21,7 +18,7 @@ type input struct {
 	players []string
 }
 
-func parseArgs(args []string) (input, error) {
+func parseArgs(args []string) (input, Error) {
 	var in input
 	if len(args) == 0 {
 		return in, errors.New("użycie: stol <gra> [godzina] [liczba-graczy] [imiona...]")
@@ -39,7 +36,7 @@ func parseArgs(args []string) (input, error) {
 		in.hhmm = defaultTime
 	}
 	if len(rest) > 0 {
-		if n, err := strconv.Atoi(rest[0]); err == nil && n >= 1 && n <= maxPlayers {
+		if n, error := strconv.Atoi(rest[0]); error == nil && n >= 1 {
 			in.slots = n
 			rest = rest[1:]
 		}

@@ -1,8 +1,8 @@
 package main
 
 type Game struct {
-	ID     int    `json:"id"`
+	Id     int    `json:"id"`
 	Name   string `json:"name"`
 	NamePl string `json:"namePl"`
-	URL    string `json:"url"`
+	Url    string `json:"url"`
 }
