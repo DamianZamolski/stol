@@ -5,10 +5,10 @@ Guide for Claude Code (claude.ai/code) in this repo.
 ## Commands
 
 - `make` — build to `~/.local/bin/stol`
-- `go build stol.go` — compile
-- `gofmt -l stol.go` — format check (empty output = OK)
-- `go vet stol.go` — vet
-- No tests. No `go.mod` (stdlib-only, single-file build).
+- `go build .` — compile
+- `gofmt -l .` — format check (empty output = OK)
+- `go vet ./...` — vet
+- No tests. `go.mod` present (module `stol`, stdlib-only — no deps).
 
 Run: `stol '<gra>' [godzina] [liczba-graczy] [imiona...]`
 Need `BGG_TOKEN` env var (BGG XML API2 Bearer auth).
@@ -19,7 +19,7 @@ CLI make Polish Facebook post for board-game session signups. Output stdout.
 
 ## Architecture
 
-Single file `stol.go`. Flow: `run` → parse args → load config → `resolveGame` → render.
+One export/unit per file, all `package main`: `main.go` (`run`), `args.go`, `render.go`, `game.go`, `config.go`, `resolve.go`, `candidate.go`, `bgg.go`, `prompt.go` (pickers + `ask`/`confirm`), `polish.go`. Flow: `run` → parse args → load config → `resolveGame` → render.
 
 - **Game resolution** (`resolveGame`): try remembered aliases first (exact, then fzf-like `fuzzyScore` subsequence match), else hit BGG. Resolved game cached back to config under new alias → repeat queries skip network.
 

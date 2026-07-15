@@ -1,2 +1,4 @@
-~/.local/bin/stol: stol.go
-	go build -o ~/.local/bin/stol stol.go
+SRC := $(wildcard *.go)
+
+~/.local/bin/stol: $(SRC)
+	go build -o ~/.local/bin/stol .
