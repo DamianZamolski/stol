@@ -16,11 +16,11 @@ func render(g *Game, in input) string {
 	fmt.Fprintf(&b, "⏰ %s\n", in.hhmm)
 	b.WriteString("\n")
 	for i := range rows {
-		who := "?"
+		name := "?"
 		if i < len(names) {
-			who = names[i]
+			name = names[i]
 		}
-		fmt.Fprintf(&b, "%d. %s\n", i+1, who)
+		fmt.Fprintf(&b, "· %s\n", name)
 	}
 	b.WriteString("\n")
 	b.WriteString(g.Url)
